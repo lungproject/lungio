@@ -21,7 +21,7 @@ from sklearn.cross_validation import StratifiedKFold
 
 from keras import backend as K
 
-from Loaddata_allparttest import load_sampledata
+from Loaddata_allparttest import load_sampledata,load_traindata,load_testdata,load_hlmpdltestdata,load_hlmtestdata,load_hlmvaldata
 from keras.models import load_model
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -31,29 +31,47 @@ import math
 modelpetct1 = load_model('./model/LungIO.hdf5')#,weightspatient2-improvement-40-0.67
 modelpetct1.summary()
 
-xpet_val,xct_val,xfuse_val,y = load_sampledata()
+xpet_train,xct_train,xfuse_train,y_train = load_traindata()
+
+xpet_train= np.expand_dims(xpet_train, axis=3)
+xct_train = np.expand_dims(xct_train, axis=3)
+xfuse_train = np.expand_dims(xfuse_train, axis=3)
+predicttrainpetct1 = modelpetct1.predict([xpet_train,xct_train,xfuse_train  ], verbose=1)
+np.savetxt("./Results/predicttrain.txt",predicttrainpetct1 )
 
 
-xpet_val= np.expand_dims(xpet_val, axis=3)
-xct_val = np.expand_dims(xct_val, axis=3)
-xfuse_val = np.expand_dims(xfuse_val, axis=3)
+xpet_test,xct_test,xfuse_test,y_test = load_testdata()
+
+xpet_test= np.expand_dims(xpet_test, axis=3)
+xct_test = np.expand_dims(xct_test, axis=3)
+xfuse_test = np.expand_dims(xfuse_test, axis=3)
+predicttestpetct1 = modelpetct1.predict([xpet_test,xct_test,xfuse_test  ], verbose=1)
+np.savetxt("./Results/predicttest.txt",predicttestpetct1 )
+
+xpet_hlmpdl,xct_hlmpdl,xfuse_hlmpdl,y_hlmpdl = load_hlmpdltestdata()
+
+xpet_hlmpdl= np.expand_dims(xpet_hlmpdl, axis=3)
+xct_hlmpdl = np.expand_dims(xct_hlmpdl, axis=3)
+xfuse_hlmpdl = np.expand_dims(xfuse_hlmpdl, axis=3)
+predicthlmpdlpetct1 = modelpetct1.predict([xpet_hlmpdl,xct_hlmpdl,xfuse_hlmpdl  ], verbose=1)
+np.savetxt("./Results/predicthlmpdl.txt",predicthlmpdlpetct1 )
 
 
-predictvalpetct1 = modelpetct1.predict([xpet_val,xct_val,xfuse_val  ], verbose=1)
 
-np.savetxt("predictval.txt",predictvalpetct1 )
+xpet_hlmIO,xct_hlmIO,xfuse_hlmIO = load_hlmtestdata()
+
+xpet_hlmIO= np.expand_dims(xpet_hlmIO, axis=3)
+xct_hlmIO = np.expand_dims(xct_hlmIO, axis=3)
+xfuse_hlmIO = np.expand_dims(xfuse_hlmIO, axis=3)
+predicthlmIOpetct1 = modelpetct1.predict([xpet_hlmIO,xct_hlmIO,xfuse_hlmIO  ], verbose=1)
+np.savetxt("./Results/predicthlmIO.txt",predicthlmIOpetct1 )
 
 
-model = Model(inputs=modelpetct1.input,
-                outputs=modelpetct1.get_layer('activation_8').output)#创建的新模型
+xpet_hlmval,xct_hlmval,xfuse_hlmval = load_hlmvaldata()
 
-activations = model.predict([xpet_val,xct_val,xfuse_val])#W
-print(activations.shape)
-np.save('activations8.npy', activations)
+xpet_hlmval= np.expand_dims(xpet_hlmval, axis=3)
+xct_hlmval = np.expand_dims(xct_hlmval, axis=3)
+xfuse_hlmval = np.expand_dims(xfuse_hlmval, axis=3)
+predicthlmvalpetct1 = modelpetct1.predict([xpet_hlmval,xct_hlmval,xfuse_hlmval  ], verbose=1)
+np.savetxt("./Results/predicthlmval.txt",predicthlmvalpetct1 )
 
-model = Model(inputs=modelpetct1.input,
-                outputs=modelpetct1.get_layer('activation_18').output)#创建的新模型
-
-activations = model.predict([xpet_val,xct_val,xfuse_val])#W
-print(activations.shape)
-np.save('activations18.npy', activations)
