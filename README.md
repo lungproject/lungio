@@ -2,8 +2,10 @@
 
 2.Download the all the files from  https://github.com/lungproject/lungio, and the trained model (lungIO.hdf5) was in the folder named model.
 
-3.Downlad all the data from https://pan.baidu.com/s/1SSN_NrErYckkn-nAyIv9FA  (code: woiu). And excted all the file into the folder named Alldata.
+3.Run Code- test_samplepatient.py with python to generate the prediction results of sample data in the folder named data. (35 seconds are needed to run all the data)
 
-3.Run test_allpatient.py with python to generate the prediction results of all the input slices. (35 seconds are needed to run all the data)
+4.Downlad all the data from https://pan.baidu.com/s/1SSN_NrErYckkn-nAyIv9FA  (code: woiu). And excted all the file into the folder named Alldata.
 
-5.Run Obtainresults.m with Matlab to obtain the predicted DLS of each patient. Other test codes were also provided in this file(25 seconds are needed to obtain the final results)
+5.Run Code- test_allpatient.py with python to generate the prediction results of all the input slices. (35 seconds are needed to run all the data)
+
+6.Run Code- Obtainresults.m with Matlab to obtain the predicted DLS of each patient. Other test codes were also provided in this file(25 seconds are needed to obtain the final results)
