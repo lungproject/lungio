@@ -24,6 +24,6 @@ cts = permute(cts,[3 1 2]);
 pets = permute(pets,[3 1 2]);
 fuses = permute(fuses,[3 1 2]);
  
-writeNPY(cts, '../data/ttxpsamplect.npy');
-writeNPY(pets, '../data/ttxpsamplepet.npy');
-writeNPY(fuses, '../data/ttxpsamplefuse.npy');
+writeNPY(cts, '../data/xpsamplect.npy');
+writeNPY(pets, '../data/xpsamplepet.npy');
+writeNPY(fuses, '../data/xpsamplefuse.npy');
