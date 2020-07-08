@@ -6,7 +6,7 @@
 
 4.Run Code- test_samplepatient.py with python to generate the prediction results of sample data in the folder named data.
 
-5.Downlad all the data from https://pan.baidu.com/s/1SSN_NrErYckkn-nAyIv9FA  (code: woiu). And excted all the file into the folder named Alldata.
+5.Downlad all the data from https://pan.baidu.com/s/1qARzx2Bk5WwaPw5rizxcWQ  (code: z2sm). And excted all the file into the folder named Alldata.
 
 6.Run Code- test_allpatient.py with python to generate the prediction results of all the input slices. (35 seconds are needed to run all the data)
 
