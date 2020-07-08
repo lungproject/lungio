@@ -1,20 +1,20 @@
 close all
 clear
-trainmrn=load('../Alldata/xptrainmrn.mat');trainmrn=trainmrn.ptrainname;
-testmrn=load('../Alldata/xptestmrn.mat');testmrn=testmrn.ptestname;
-hlmpdlmrn=load('../Alldata/hlmpdlmrn.mat');hlmpdlmrn=hlmpdlmrn.pname1;
-hlmIOmrn=load('../Alldata/hlmretroIOmrn.mat');hlmIOmrn=hlmIOmrn.pname2;
-hlmvalmrn=load('../Alldata/hlmproIOmrn.mat');hlmvalmrn=hlmvalmrn.pname3;
+trainmrn=load('../data/Alldata/xptrainmrn.mat');trainmrn=trainmrn.ptrainname;
+testmrn=load('../data/Alldata/xptestmrn.mat');testmrn=testmrn.ptestname;
+hlmpdlmrn=load('../data/Alldata/hlmpdlmrn.mat');hlmpdlmrn=hlmpdlmrn.pname1;
+hlmIOmrn=load('../data/Alldata/hlmretroIOmrn.mat');hlmIOmrn=hlmIOmrn.pname2;
+hlmvalmrn=load('../data/Alldata/hlmproIOmrn.mat');hlmvalmrn=hlmvalmrn.pname3;
 
-CIHClin = xlsread('../Alldata/CIHClin.xlsx');
-HLMPDLClin= xlsread('../Alldata/HLMPDLClin.xlsx');
-HLMIOClin= xlsread('../Alldata/HLMIOClin.xlsx');
+CIHClin = xlsread('../data/Alldata/CIHClin.xlsx');
+HLMPDLClin= xlsread('../data/Alldata/HLMPDLClin.xlsx');
+HLMIOClin= xlsread('../data/Alldata/HLMIOClin.xlsx');
 
-trainfeature = load('../Results/predicttrain.txt');
-testfeature = load('../Results/predicttest.txt');
-hlmpdlfeature = load('../Results/predicthlmpdl.txt');
-hlmIOfeature = load('../Results/predicthlmIO.txt');
-hlmvalfeature= load('../Results/predicthlmval.txt');
+trainfeature = load('../data/Results/predicttrain.txt');
+testfeature = load('../data/Results/predicttest.txt');
+hlmpdlfeature = load('../data/Results/predicthlmpdl.txt');
+hlmIOfeature = load('../data/Results/predicthlmIO.txt');
+hlmvalfeature= load('../data/Results/predicthlmval.txt');
 
 pretrain = trainfeature(:,2);
 pretest = testfeature(:,2);
@@ -49,7 +49,7 @@ hlmpdldata = unique(hlmpdlmrn);
 for i=1:length(hlmpdldata)
     ind =  find(hlmpdlmrn==hlmpdldata(i)); 
     temp1 = prehlmpdl(ind,:);
-    hlmpdlpp(i,:)=mean(temp1); 
+    hlmpdlpp(i,:)=round(mean(temp1),2,'significant'); 
     [~,ind] = ismember(hlmpdldata(i),HLMPDLClin(:,1));
     plabelhlmpdl(i,1) = HLMPDLClin(ind,end);
 
@@ -57,9 +57,9 @@ for i=1:length(hlmpdldata)
 end
 
 cutoff=0.54 ;
-evetrain = EvaluationModel(trainpp,plabeltrain,1,cutoff);
-evetest = EvaluationModel(testpp,plabeltest,1,cutoff);
-evehlmpdl = EvaluationModel(hlmpdlpp,plabelhlmpdl,1,cutoff);
+evetrain = EvaluationModel(trainpp,plabeltrain,1,cutoff)
+evetest = EvaluationModel(testpp,plabeltest,1,cutoff)
+evehlmpdl = EvaluationModel(hlmpdlpp,plabelhlmpdl,1,cutoff)
 
 
 hlmIOdata = unique(hlmIOmrn);
@@ -86,30 +86,16 @@ for i=1:length(hlmvaldata)
 end
 hlmvalprognosis(:,[1 3])=hlmvalprognosis(:,[1 3])/30;
 cutoff=0.54 ;
-[~,~,~, DCBIOauc]=perfcurve(hlmprognosis(:,end),hlmIOpp, 1);
-[~,~,~, DCBvalauc]=perfcurve(hlmvalprognosis(:,end),hlmvalpp, 1);
+
+[~,~,~, DCBIOauc]=perfcurve(hlmprognosis(:,end),hlmIOpp, 1)
+[~,~,~, DCBvalauc]=perfcurve(hlmvalprognosis(:,end),hlmvalpp, 1)
 
 
 
 
+logrank(hlmprognosis(:,1), hlmprognosis(:,2),hlmIOpp, 'CutPoint',cutoff)
+logrank(hlmprognosis(:,3), hlmprognosis(:,4),hlmIOpp, 'CutPoint',cutoff)
 
-indh1 = find(hlmIOpp>=cutoff);indh2 =find(hlmIOpp<cutoff);
-X1 = [hlmprognosis(indh1,1) 1-hlmprognosis(indh1,2)];
-X2 = [hlmprognosis(indh2,1) 1-hlmprognosis(indh2,2)];
-figure, p1=logrank(X1,X2);
-
-X1 = [hlmprognosis(indh1,3) 1-hlmprognosis(indh1,4)];
-X2 = [hlmprognosis(indh2,3) 1-hlmprognosis(indh2,4)];
-figure, p2=logrank(X1,X2);
-
-
-indh1 = find(hlmvalpp>=cutoff);indh2 =find(hlmvalpp<cutoff);
-X1 = [hlmvalprognosis(indh1,1) 1-hlmvalprognosis(indh1,2)];
-X2 = [hlmvalprognosis(indh2,1) 1-hlmvalprognosis(indh2,2)];
-figure, p1=logrank(X1,X2);
-
-X1 = [hlmvalprognosis(indh1,3) 1-hlmvalprognosis(indh1,4)];
-X2 = [hlmvalprognosis(indh2,3) 1-hlmvalprognosis(indh2,4)];
-figure, p2=logrank(X1,X2);
-
+logrank(hlmvalprognosis(:,1), hlmvalprognosis(:,2),hlmvalpp, 'CutPoint',cutoff)
+logrank(hlmvalprognosis(:,3), hlmvalprognosis(:,4),hlmvalpp, 'CutPoint',cutoff)
 
